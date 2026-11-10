@@ -3,7 +3,14 @@ export const API_BASE_URL = window.location.port === '3000'
   : `${window.location.protocol}//${window.location.hostname || 'localhost'}:3000`
 
 export async function fetchApiJson(path, signal) {
-  const response = await fetch(`${API_BASE_URL}${path}`, { signal })
+  let response
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, { signal })
+  } catch (error) {
+    if (error.name === 'AbortError') throw error
+    throw new Error('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ตหรือเริ่มเซิร์ฟเวอร์ด้วยคำสั่ง node server.js')
+  }
+
   const contentType = response.headers.get('content-type') || ''
 
   if (!contentType.includes('application/json')) {
