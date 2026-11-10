@@ -5,32 +5,6 @@ export function getMangaTitle(manga) {
   return titles.en || titles.th || Object.values(titles)[0] || 'Manga Title'
 }
 
-export function getMangaAltTitle(manga) {
-  const altTitle = (manga?.attributes?.altTitles || [])
-    .flatMap((title) => Object.values(title))
-    .find((title) => typeof title === 'string' && title.trim())
-
-  if (!altTitle) return ''
-
-  const titleWords = getTitleWords(getMangaTitle(manga))
-  const altTitleWords = getTitleWords(altTitle)
-  const sharedWords = [...altTitleWords].filter((word) => titleWords.has(word)).length
-  const similarity = sharedWords / Math.min(titleWords.size, altTitleWords.size)
-
-  return sharedWords >= 3 && similarity >= 0.4 ? '' : altTitle
-}
-
-function getTitleWords(title) {
-  return new Set(
-    title
-      .toLowerCase()
-      .normalize('NFKD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .split(/[^\p{L}\p{N}]+/u)
-      .filter((word) => word.length > 1),
-  )
-}
-
 export function getMangaCoverUrl(manga) {
   const cover = (manga?.relationships || []).find((relation) => relation.type === 'cover_art')
   const fileName = cover?.attributes?.fileName

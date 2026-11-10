@@ -14,6 +14,7 @@ export default function useMangaSearch() {
   const requestRef = useRef(0)
   const scrollAfterLoadRef = useRef(false)
 
+  // debounce 350ms ลดจำนวน request ตอนพิมพ์
   useEffect(() => {
     const timer = window.setTimeout(() => setSearchQuery(searchText.trim()), 350)
     return () => window.clearTimeout(timer)
@@ -57,6 +58,7 @@ export default function useMangaSearch() {
     return () => controller.abort()
   }, [searchQuery, genre, page])
 
+  // เลื่อนขึ้นบนหลังผลลัพธ์ใหม่แสดงแล้ว (หน้าที่มีรายการน้อยจะสั้นลง ถ้าเลื่อนก่อนแล้วหน้าหดจะค้าง)
   useEffect(() => {
     if (!loading && scrollAfterLoadRef.current) {
       scrollAfterLoadRef.current = false
@@ -81,7 +83,7 @@ export default function useMangaSearch() {
   const changePage = (nextPage) => {
     const count = Math.max(1, pageCount)
     if (nextPage < 1 || nextPage > count) return
-    scrollAfterLoadRef.current = true 
+    scrollAfterLoadRef.current = true // รอโหลดเสร็จก่อนค่อยเลื่อนขึ้นบน
     setPage(nextPage)
   }
 

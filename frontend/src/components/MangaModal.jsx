@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import CoverImage from './CoverImage'
 import { fetchApiJson } from '../api'
-import { getMangaAltTitle, getMangaDescription, getMangaTitle } from '../utils/manga'
+import { getMangaDescription, getMangaTitle } from '../utils/manga'
 
 function MangaModal({ manga, cover, isFollowed, onToggleFollow, onClose }) {
   const [followerCount, setFollowerCount] = useState('')
@@ -30,7 +30,6 @@ function MangaModal({ manga, cover, isFollowed, onToggleFollow, onClose }) {
 
   const attributes = manga.attributes || {}
   const followLabel = isFollowed ? 'เลิกติดตาม' : 'เพิ่มรายการโปรด'
-  const altTitle = getMangaAltTitle(manga)
 
   return (
     <div
@@ -51,11 +50,13 @@ function MangaModal({ manga, cover, isFollowed, onToggleFollow, onClose }) {
             <p className="cat-modal-status">
               {[attributes.status, attributes.year].filter(Boolean).join(' · ')}
             </p>
+            <p className="cat-modal-alt-title">
+              {(attributes.altTitles || []).flatMap((title) => Object.values(title))[0] || ''}
+            </p>
             <div className="cat-description-box">
               <strong>เรื่องย่อ :</strong>
               <p>{getMangaDescription(manga, 'ยังไม่มีเรื่องย่อ')}</p>
             </div>
-            {altTitle && <p className="cat-modal-alt-title">{altTitle}</p>}
             <div className="cat-followers-box" aria-live="polite">
               <span className="cat-followers-label">ผู้ติดตาม</span>
               <span>{followerCount}</span>

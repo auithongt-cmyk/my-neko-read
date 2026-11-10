@@ -10,7 +10,7 @@ export default function useRandomManga(openManga) {
     setRandomLoading(true)
     setRandomError('')
     try {
-      
+      // หน่วงอย่างน้อย 1.8 วินาทีให้แอนิเมชันแมวเล่นจนจบ
       const [result] = await Promise.all([
         fetchApiJson('/api/random'),
         new Promise((resolve) => window.setTimeout(resolve, 1800)),
